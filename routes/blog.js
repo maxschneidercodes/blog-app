@@ -34,6 +34,16 @@ router.get("/new-post", async function (req, res) {
   res.render("create-post");
 });
 
+router.get("/posts/:id", async function (req, res) {
+  postModel.findById(req.params.id, {}, (err, post) => {
+    if (err) {
+      res.status(500).send("An error occurred", err);
+    } else {
+      res.render("post-detail", { post: post });
+    }
+  });
+});
+
 router.post("/new-post", upload.single("image"), function (req, res) {
   var postObject = {
     title: req.body.title,
