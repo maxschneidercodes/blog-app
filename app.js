@@ -1,11 +1,12 @@
 const path = require("path");
 const db = require("./util/mongodb-connect");
-db.connectMongoDB();
 const express = require("express");
 const bodyParser = require("body-parser");
 const blogRoutes = require("./routes/blog");
 
 const app = express();
+
+db.connectMongoDB();
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());

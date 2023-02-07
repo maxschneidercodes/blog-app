@@ -1,6 +1,5 @@
 require("dotenv").config();
 const mongoose = require("mongoose");
-const { MongoClient, ServerApiVersion } = require("mongodb");
 
 function connectMongoDB() {
   const MONGODB_USERNAME = process.env.MONGODB_USERNAME;
@@ -10,11 +9,12 @@ function connectMongoDB() {
 
   try {
     mongoose.connect(DATABASE_URL);
-    mongoose.set("strictQuery", true);
     const db = mongoose.connection;
     db.on("error", (error) => console.error(error));
     db.once("open", () => console.log("Connected Successfully to mongoose"));
-  } catch (err) {}
+  } catch (error) {
+    console.error(error);
+  }
 }
 
 module.exports = {

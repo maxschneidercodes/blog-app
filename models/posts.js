@@ -3,9 +3,9 @@ const mongoose = require("mongoose");
 const schema = mongoose.Schema({
   title: String,
   desc: String,
+  date: String,
+  type: String,
   imgPath: String,
 });
-
-// schema.methods.save = async function (post) {};
 
 module.exports = mongoose.model("Post", schema);
