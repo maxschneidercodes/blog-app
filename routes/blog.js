@@ -46,7 +46,7 @@ router.get("/posts/:id", async function (req, res) {
 });
 
 router.post("/new-post", upload.single("image"), function (req, res) {
-  var postObject = {
+  const postObject = {
     title: req.body.title,
     type: req.body.type,
     date: req.body.date,
@@ -63,7 +63,25 @@ router.post("/new-post", upload.single("image"), function (req, res) {
   }
 });
 
-router.get("/delete-post/:id", function (req, res) {
+router.get("/update-post/:id", function (req, res) {
+  postModel.findById(req.params.id, {}, (err, post) => {
+    if (err) {
+      res.status(500).send("An error occurred", err);
+    } else {
+      res.render("post-update", { post: post });
+    }
+  });
+});
+
+router.post("/update-post/:id", upload.single("image"), function (req, res) {
+  const postObject = {
+    title: req.body.title,
+    type: req.body.type,
+    date: req.body.date,
+    desc: req.body.desc,
+    imgPath: req.file.filename,
+  };
+
   postModel.findById(req.params.id, {}, (err, post) => {
     if (err) {
       res.status(500).send("An error occurred", err);
@@ -73,12 +91,33 @@ router.get("/delete-post/:id", function (req, res) {
           console.error(err);
           return;
         } else {
-          postModel.deleteOne(post._id, function (err, obj) {
-            if (err) throw err;
-            console.log("1 document deleted");
-            res.redirect("/");
-          });
+          postModel.updateOne(
+            { id: post._id },
+            postObject,
+            function (err, obj) {
+              if (err) throw err;
+              console.log("1 document updatet");
+              res.redirect("/");
+            }
+          );
         }
+      });
+    }
+  });
+});
+
+router.get("/delete-post/:id", function (req, res) {
+  postModel.findById(req.params.id, {}, (err, post) => {
+    if (err) {
+      res.status(500).send("An error occurred", err);
+    } else {
+      fs.unlink(path.join("public/uploads/" + post.imgPath), (err) => {
+        console.error(err);
+        postModel.deleteOne(post._id, function (err, obj) {
+          if (err) throw err;
+          console.log("1 document deleted");
+          res.redirect("/");
+        });
       });
     }
   });

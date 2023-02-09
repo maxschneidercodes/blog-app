@@ -27,7 +27,7 @@
     </div>
 
     <div class="text-center">
-      <button class="mb-4 w-20 btn btn-primary btn-lg" type="submit">update Post</button>
+      <a href="/update-post/<%= post._id%>" class="mb-4 w-20 btn btn-primary btn-lg">update Post</a>
       <form action="/delete-post/<%= post._id%>" method="DELETE">
         <button class="mb-4 w-20 btn btn-danger btn-lg" type="submit">delete
           Post</button>

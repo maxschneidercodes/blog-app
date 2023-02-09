@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <%- include('includes/head', { title: 'Post title' }) %>
+
+</head>
+
+<body>
+    <%- include('includes/header') %>
+
+        <main class="container">
+            <h1>Update Post</h1>
+            <form action="/update-post/<%= post._id%>" method="post" enctype="multipart/form-data">
+                <div>
+                    <br />
+                    <label class="form-label" for="name">Image Title</label>
+                    <input class="form-control" type="text" id="title" placeholder="title" value="<%= post.title %>"
+                        name="title" required>
+                </div>
+                <div>
+                    <br />
+                    <label class="form-label" for="desc">Type</label>
+                    <input class="form-control" id="desc" name="type" value="<%= post.type %>" placeholder="World"
+                        required></textarea>
+                </div>
+                <div>
+                    <br />
+                    <label class="form-label" for="desc">Date</label>
+                    <input class="form-control" type="date" value="<%= post.date %>" id="start" name="date">
+                </div>
+                <div>
+                    <br />
+                    <label class="form-label" for="desc">Image Description</label>
+                    <textarea class="form-control" id="desc" name="desc" rows="2" placeholder="<%= post.desc %>"
+                        required></textarea>
+                </div>
+                <div>
+                    <br />
+                    <img class="shadow-lg rounded mx-auto d-block" width="1270" height="450"
+                        src="/uploads/<%=post.imgPath%>" />
+
+                    <label class="form-label" for="image">Upload Image</label>
+                    <input class="form-control" type="file" id="image" name="image" value="" required>
+                </div>
+                <div>
+                    <br />
+                    <button class="mb-4 w-20 btn btn-primary btn-lg" type="submit">update Post</button>
+                </div>
+            </form>
+        </main>
+        <%- include('includes/footer' )%>
+</body>
+
+</html>
