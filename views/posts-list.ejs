@@ -8,37 +8,43 @@
 <body>
   <%- include('includes/header') %>
     <main class="container">
+
+
       <div class="row">
         <div class="col"></div>
-        <div class="mb-4 col-md-6 px-0 border rounded">
-          <a href="/posts/<%= featurePost._id %>" class="text-primary fw-bold">
-            <img class="rounded mx-auto d-block" width="420" height="350" src="/uploads/<%=featurePost.imgPath%>" />
-          </a>
-          <h1 class="pt-2 fs-1 text-center fst-italic">
-            <%= featurePost.title %>
-          </h1>
-          <div class="text-center">
-            <strong class=" d-inline-block text-primary">
-              <%= featurePost.type %>
-            </strong>
+        <% if (featurePost !=undefined && posts !=[]){ %>
+          <div class="mb-4 col-md-6 px-0 border rounded">
+            <a href="/posts/<%= featurePost._id %>" class="text-primary fw-bold">
+              <img class="rounded mx-auto d-block" width="420" height="350" src="/uploads/<%=featurePost.imgPath%>" />
+            </a>
+            <h1 class="pt-2 fs-1 text-center fst-italic">
+              <%= featurePost.title %>
+            </h1>
+            <div class="text-center">
+              <strong class=" d-inline-block text-primary">
+                <%= featurePost.type %>
+              </strong>
+            </div>
+            <div class="pb-2 opacity-75 text-center text-dark ">
+              <%= featurePost.date %>
+            </div>
           </div>
-          <div class="pb-2 opacity-75 text-center text-dark ">
-            <%= featurePost.date %>
+          <div class="col"></div>
+          <div class="col-md-8">
+            <div class="row mb-2">
+              <% posts.forEach(function(post) { %>
+                <%- include('includes/blog-item',{post:post}) %>
+                  <% }) %>
+            </div>
           </div>
-
-
-        </div>
-        <div class="col"></div>
-        <div class="col-md-8">
-          <div class="row mb-2">
-            <% posts.forEach(function(post) { %>
-              <%- include('includes/blog-item',{post:post}) %>
-                <% }) %>
-          </div>
-        </div>
+          <% }else { %>
+            <h1>No Content Found</h1>
+            <% } %>
       </div>
-    </main>
 
+
+    </main>
+    <%- include('includes/footer' )%>
 </body>
 
 </html>

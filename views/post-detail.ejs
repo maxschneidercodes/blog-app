@@ -8,6 +8,7 @@
 
 <body>
   <%- include('includes/header') %>
+
     <div class="container">
 
       <div class="m-2 opacity-75 text-center text-dark">
@@ -24,6 +25,17 @@
         <%= post.desc %>
       </p>
     </div>
+
+    <div class="text-center">
+      <button class="mb-4 w-20 btn btn-primary btn-lg" type="submit">update Post</button>
+      <form action="/delete-post/<%= post._id%>" method="DELETE">
+        <button class="mb-4 w-20 btn btn-danger btn-lg" type="submit">delete
+          Post</button>
+      </form>
+
+    </div>
+
+    <%- include('includes/footer' )%>
 </body>
 
 </html>

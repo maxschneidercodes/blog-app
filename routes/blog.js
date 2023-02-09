@@ -3,6 +3,7 @@ const postModel = require("../models/posts");
 const router = express.Router();
 const path = require("path");
 const multer = require("multer");
+const fs = require("fs");
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -60,6 +61,27 @@ router.post("/new-post", upload.single("image"), function (req, res) {
   } catch (error) {
     res.status(500).send(error);
   }
+});
+
+router.get("/delete-post/:id", function (req, res) {
+  postModel.findById(req.params.id, {}, (err, post) => {
+    if (err) {
+      res.status(500).send("An error occurred", err);
+    } else {
+      fs.unlink(path.join("public/uploads/" + post.imgPath), (err) => {
+        if (err) {
+          console.error(err);
+          return;
+        } else {
+          postModel.deleteOne(post._id, function (err, obj) {
+            if (err) throw err;
+            console.log("1 document deleted");
+            res.redirect("/");
+          });
+        }
+      });
+    }
+  });
 });
 
 module.exports = router;
