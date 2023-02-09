@@ -20,8 +20,7 @@ app.use(express.static("public"));
 app.use(blogRoutes);
 
 app.use(function (error, req, res, next) {
-  console.log(error);
-  res.status(500).render("500");
+  res.status(500).render("500", { error: error });
 });
 
 app.listen(3000);

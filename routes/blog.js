@@ -1,34 +1,23 @@
-const express = require("express");
-const postModel = require("../models/posts");
-const router = express.Router();
-const path = require("path");
-const multer = require("multer");
 const fs = require("fs");
+const path = require("path");
 
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, "public/uploads");
-  },
-  filename: (req, file, cb) => {
-    cb(null, file.fieldname + "-" + Date.now() + file.originalname);
-  },
-});
-const upload = multer({ storage: storage });
+const postController = require("../Controller/PostController");
+const uploadServices = require("../Services/MulterServices");
+
+const express = require("express");
+const router = express.Router();
 
 router.get("/", function (req, res) {
   res.redirect("/posts");
 });
 
-router.get("/posts", function (req, res) {
-  postModel.find({}, (err, posts) => {
-    if (err) {
-      res.status(500).send("An error occurred", err);
-    } else {
-      const featurePost = posts[0];
-      const allPosts = posts.slice(1);
-      res.render("posts-list", { posts: allPosts, featurePost: featurePost });
-    }
-  });
+router.get("/posts", async function (req, res) {
+  const posts = await postController.getAllPosts(req, res);
+  const featurePost = posts[0];
+  const allPosts = posts.slice(1);
+  res
+    .status(200)
+    .render("posts-list", { posts: allPosts, featurePost: featurePost });
 });
 
 router.get("/new-post", async function (req, res) {
@@ -36,91 +25,62 @@ router.get("/new-post", async function (req, res) {
 });
 
 router.get("/posts/:id", async function (req, res) {
-  postModel.findById(req.params.id, {}, (err, post) => {
-    if (err) {
-      res.status(500).send("An error occurred", err);
-    } else {
-      res.render("post-detail", { post: post });
-    }
-  });
+  const post = await postController.getPostById(req, res);
+  res.status(200).render("post-detail", { post: post });
 });
 
-router.post("/new-post", upload.single("image"), function (req, res) {
-  const postObject = {
-    title: req.body.title,
-    type: req.body.type,
-    date: req.body.date,
-    desc: req.body.desc,
-    imgPath: req.file.filename,
-  };
+router.post(
+  "/new-post",
+  uploadServices.single("image"),
+  async function (req, res) {
+    const postObject = {
+      title: req.body.title,
+      type: req.body.type,
+      date: req.body.date,
+      desc: req.body.desc,
+      imgPath: req.file.filename,
+    };
 
-  const post = new postModel(postObject);
-  try {
-    post.save();
+    await postController.createPost(req, res, postObject);
     res.render("success");
-  } catch (error) {
-    res.status(500).send(error);
   }
+);
+
+router.get("/update-post/:id", async function (req, res) {
+  const post = await postController.updatePost(req, res);
+  res.render("post-update", { post: post });
 });
 
-router.get("/update-post/:id", function (req, res) {
-  postModel.findById(req.params.id, {}, (err, post) => {
-    if (err) {
-      res.status(500).send("An error occurred", err);
-    } else {
-      res.render("post-update", { post: post });
-    }
-  });
-});
+router.post(
+  "/update-post/:id",
+  uploadServices.single("image"),
+  async function (req, res) {
+    const post = await postController.getPostById(req, res);
 
-router.post("/update-post/:id", upload.single("image"), function (req, res) {
-  const postObject = {
-    title: req.body.title,
-    type: req.body.type,
-    date: req.body.date,
-    desc: req.body.desc,
-    imgPath: req.file.filename,
-  };
+    const postObject = {
+      title: req.body.title,
+      type: req.body.type,
+      date: req.body.date,
+      desc: req.body.desc,
+      imgPath: req.file.filename,
+    };
 
-  postModel.findById(req.params.id, {}, (err, post) => {
-    if (err) {
-      res.status(500).send("An error occurred", err);
-    } else {
-      fs.unlink(path.join("public/uploads/" + post.imgPath), (err) => {
-        if (err) {
-          console.error(err);
-          return;
-        } else {
-          postModel.updateOne(
-            { id: post._id },
-            postObject,
-            function (err, obj) {
-              if (err) throw err;
-              console.log("1 document updatet");
-              res.redirect("/");
-            }
-          );
-        }
-      });
-    }
-  });
-});
+    fs.unlink(path.join("public/uploads/" + post.imgPath), (err) => {});
 
-router.get("/delete-post/:id", function (req, res) {
-  postModel.findById(req.params.id, {}, (err, post) => {
-    if (err) {
-      res.status(500).send("An error occurred", err);
-    } else {
-      fs.unlink(path.join("public/uploads/" + post.imgPath), (err) => {
-        console.error(err);
-        postModel.deleteOne(post._id, function (err, obj) {
-          if (err) throw err;
-          console.log("1 document deleted");
-          res.redirect("/");
-        });
-      });
-    }
-  });
+    await postController.updatePost(req, res, postObject);
+
+    res.redirect("/");
+  }
+);
+
+router.get("/delete-post/:id", async function (req, res) {
+  const post = await postController.getPostById(req, res);
+
+  fs.unlink(path.join("public/uploads/" + post.imgPath), (err) => {});
+
+  postController.deletePost(req, res);
+
+  res.redirect("/");
 });
 
 module.exports = router;
