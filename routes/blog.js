@@ -1,8 +1,8 @@
 const fs = require("fs");
 const path = require("path");
 
-const postController = require("../Controller/PostController");
-const uploadServices = require("../Services/MulterServices");
+const postController = require("../controller/PostController");
+const uploadServices = require("../services/MulterServices");
 
 const express = require("express");
 const router = express.Router();

@@ -1,4 +1,4 @@
-const postService = require("../Services/PostsServices");
+const postService = require("../services/PostsServices");
 
 function isObjc(objc) {
   if (objc !== {} || objc !== undefined) {

@@ -4,19 +4,24 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "start": "nodemon app.js"
+    "start": "nodemon app.js",
+    "test": "mocha"
   },
   "keywords": [],
   "author": "Max Schneider",
   "license": "MIT",
   "dependencies": {
     "body-parser": "^1.20.1",
+    "chai": "^4.3.7",
+    "chai-http": "^4.3.0",
     "dotenv": "^16.0.3",
     "ejs": "^3.1.6",
     "express": "^4.17.1",
+    "mocha": "^10.2.0",
     "mongodb": "^5.0.0",
     "mongoose": "^6.9.0",
-    "multer": "^1.4.5-lts.1"
+    "multer": "^1.4.5-lts.1",
+    "save-dev": "^0.0.1-security"
   },
   "devDependencies": {
     "nodemon": "^2.0.7"
