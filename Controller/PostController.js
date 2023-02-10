@@ -52,3 +52,11 @@ exports.deletePost = async (req, res) => {
     res.render("500", { error: err.message });
   }
 };
+
+exports.pushComment = async (req, res, objc) => {
+  try {
+    return await postService.pushComment(req.params.id, objc);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};

@@ -3,13 +3,23 @@
 
 <head>
   <%- include('includes/head', { title: 'Post title' }) %>
-
+    <script src="/scripts/comments.js"></script>
 </head>
 
 <body>
   <%- include('includes/header') %>
+    <div class="text-center">
+      <h2 class="mt-2">Admin Tools</h2>
+      <div class="btn-group " role="group" aria-label="Basic example">
 
-    <div class="container">
+        <a href="/update-post/<%= post._id%>" class=" m-4 w-40 btn btn-primary btn-lg">update Post</a>
+        <form action="/delete-post/<%= post._id%>" method="DELETE">
+          <button class=" m-4 w-40 btn btn-danger btn-lg" type="submit">delete
+            Post</button>
+        </form>
+      </div>
+    </div>
+    <div class="container col-4">
 
       <div class="m-2 opacity-75 text-center text-dark">
         <%= post.date %>
@@ -26,14 +36,26 @@
       </p>
     </div>
 
-    <div class="text-center">
-      <div class="btn-group " role="group" aria-label="Basic example">
-        <a href="/update-post/<%= post._id%>" class=" m-4 w-40 btn btn-primary btn-lg">update Post</a>
-        <form action="/delete-post/<%= post._id%>" method="DELETE">
-          <button class=" m-4 w-40 btn btn-danger btn-lg" type="submit">delete
-            Post</button>
-        </form>
-      </div>
+    <div class="container col-4">
+      <h2>Comments</h2>
+      <div data-postid="<%=post._id%>" id="comments"></div>
+    </div>
+
+
+    <div class="container col-4">
+      <h2>Leave a Comment</h2>
+      <form id="comment-form" data-postid="<%=post._id%>">
+        <div>
+          <br />
+          <input class="form-control" type="text" id="comment-username" placeholder="Name" name="username" required>
+        </div>
+        <div>
+          <br />
+          <textarea class="form-control" id="comment-desc" name="desc" rows="2" placeholder="Comment.."
+            required></textarea>
+        </div>
+        <br />
+        <button class="mb-4 w-20 btn btn-primary btn-lg" type="submit">post comment</button>
     </div>
 
     <%- include('includes/footer' )%>

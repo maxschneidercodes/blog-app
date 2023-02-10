@@ -18,3 +18,14 @@ exports.updatePost = async (id, blog) => {
 exports.deletePost = async (id) => {
   return await postModel.findByIdAndDelete(id);
 };
+
+exports.pushComment = async (id, objc) => {
+  return await postModel.updateOne(
+    { _id: id },
+    {
+      $addToSet: {
+        comments: objc,
+      },
+    }
+  );
+};

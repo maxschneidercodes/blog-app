@@ -83,4 +83,20 @@ router.get("/delete-post/:id", async function (req, res) {
   res.redirect("/");
 });
 
+router.get("/posts/:id/comments", async function (req, res) {
+  const post = await postController.getPostById(req, res);
+  const comments = post.comments;
+  res.status(200).json({ message: "success", comments: comments });
+});
+
+router.post("/posts/:id/post-comment", async function (req, res) {
+  const commentObjc = {
+    username: req.body.username,
+    desc: req.body.desc,
+  };
+
+  await postController.pushComment(req, res, commentObjc);
+  res.status(200).json({ message: "success" });
+});
+
 module.exports = router;
